@@ -25,4 +25,7 @@ jobs:
           npm cache clean --force
           npm cache verify
           npm install --strict-ssl=false
-          npx serverless deploy --verbose
+          echo $YOUR_ACCESS_KEY_ID
+          echo $YOUR_ACCESS_KEY_ID
+          serverless config credentials --provider aws --key $YOUR_ACCESS_KEY_ID --secret $YOUR_SECRET_KEY --profile serverless
+          serverless deploy --verbose

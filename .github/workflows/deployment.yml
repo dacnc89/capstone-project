@@ -28,7 +28,7 @@ jobs:
     #   npm install --strict-ssl=false
     #   npm audit fix | true
     - name: Install Plugin and Deploy
-      uses: serverless/github-action@v3.2
+      uses: serverless/github-action@v2
       with:
         args: -c "cd ./backend && rm -rf ./node-modules package-lock.json && npm cache clean --force && npm install --strict-ssl=false && npm audit fix | true && serverless plugin install --name serverless-iam-roles-per-function && serverless plugin install --name serverless-webpack && serverless plugin install --name serverless-plugin-tracing && serverless plugin install --name serverless-reqvalidator-plugin && serverless deploy --verbose && serverless doctor"
         entrypoint: /bin/sh

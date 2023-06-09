@@ -1,4 +1,8 @@
 # Serverless TODO
+### Here are url, credentials for verifying TODO app:
+[TODO endpoint](http://serverless-client-dev.us-east-1.elasticbeanstalk.com)
+email: test@email.com
+password: password@1234
 
 To implement this project, you need to implement a simple TODO application using AWS Lambda and Serverless framework. Search for all comments starting with the `TODO:` in the code to find the placeholders that you need to implement.
 

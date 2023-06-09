@@ -23,10 +23,11 @@ jobs:
       - name: Test serverless app build
         run: |
           cd backend
+          rm -rf ./node-modules package-lock.json
           npm cache clean --force
           npm cache verify
           npm install --strict-ssl=false
-          npm install && npm audit fix | true
+          npm audit fix | true
           npx serverless webpack --out build
 
 

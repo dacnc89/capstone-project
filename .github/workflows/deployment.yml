@@ -1,0 +1,28 @@
+name: Deployment
+
+on:
+  push:
+    branches:
+      - dev
+  workflow_dispatch:
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    env:
+      SERVERLESS_ACCESS_KEY: serverless_1685431360
+      AWS_ACCESS_KEY_ID: AKIASDCI4QH764K5ELOI
+      AWS_SECRET_ACCESS_KEY: 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
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+      - name: Deploy
+        run: |
+          cd backend
+          rm -rf ./node-modules package-lock.json
+          npm cache clean --force
+          npm cache verify
+          npm install --strict-ssl=false
+          npx serverless deploy --verbose

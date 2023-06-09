@@ -1,7 +1,7 @@
 # TODO: Change the name of the org 
 org: dacnc
-app: serverless-todo-app
-service: serverless-todo-app
+app: capstone-project
+service: capstone-project
 
 plugins:
   - serverless-webpack
@@ -24,7 +24,7 @@ provider:
   environment:
     TODOS_TABLE: Todos-${self:provider.stage}
     TODOS_CREATED_AT_INDEX: CreatedAtIndex
-    ATTACHMENT_S3_BUCKET: dacnc-serverless-c4-todo-images-${self:provider.stage}
+    ATTACHMENT_S3_BUCKET: dacnc-capstone-project-images-${self:provider.stage}
     SIGNED_URL_EXPIRATION: 300
 
   logs:
@@ -52,7 +52,7 @@ functions:
           path: todos
           cors: true
           authorizer: Auth
-    iamRoleStatementsName: uda4-get-todo-role-${self:provider.stage}
+    iamRoleStatementsName: capstone-get-todo-role-${self:provider.stage}
     iamRoleStatements:
       - Effect: Allow
         Action:
@@ -71,7 +71,7 @@ functions:
           request:
             schemas:
               application/json: ${file(models/create-todo-model.json)}
-    iamRoleStatementsName: uda4-create-todo-role-${self:provider.stage}
+    iamRoleStatementsName: capstone-create-todo-role-${self:provider.stage}
     iamRoleStatements:
       - Effect: Allow
         Action:
@@ -90,7 +90,7 @@ functions:
           request:
             schemas:
               application/json: ${file(models/update-todo-model.json)}
-    iamRoleStatementsName: uda4-update-todo-role-${self:provider.stage}
+    iamRoleStatementsName: capstone-update-todo-role-${self:provider.stage}
     iamRoleStatements:
       - Effect: Allow
         Action:
@@ -105,7 +105,7 @@ functions:
           path: todos/{todoId}
           cors: true
           authorizer: Auth
-    iamRoleStatementsName: uda4-delete-todo-role-${self:provider.stage}
+    iamRoleStatementsName: capstone-delete-todo-role-${self:provider.stage}
     iamRoleStatements:
       - Effect: Allow
         Action:
@@ -125,7 +125,7 @@ functions:
           path: todos/{todoId}/attachment
           cors: true
           authorizer: Auth
-    iamRoleStatementsName: uda4-generate-upload-role-${self:provider.stage}
+    iamRoleStatementsName: capstone-generate-upload-role-${self:provider.stage}
     iamRoleStatements:
       - Effect: Allow
         Action:

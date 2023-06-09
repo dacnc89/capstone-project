@@ -8,24 +8,26 @@ on:
   workflow_dispatch:
 
 jobs:
-  # build-backend:
-  #   runs-on: ubuntu-latest
-  #   env:
-  #     AWS_ACCESS_KEY_ID: 
-  #     AWS_SECRET_ACCESS_KEY: AKIASDCI4QH764K5ELOI 
-  #     AWS_SESSION_TOKEN: kcnhl42NjhzkzR2RRMfAllUx0pSuhMtIgTaV7sY1 
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - uses: actions/setup-node@v3
-  #       with:
-  #         node-version: '18.x'
+  build-backend:
+    runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: 
+      AWS_SECRET_ACCESS_KEY: AKIASDCI4QH764K5ELOI 
+      AWS_SESSION_TOKEN: kcnhl42NjhzkzR2RRMfAllUx0pSuhMtIgTaV7sY1 
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
 
-  #     - name: Test serverless app build
-  #       run: |
-  #         cd backend
-  #         rm package-lock.json
-  #         npm install && npm audit fix | true
-  #         npx serverless webpack --out build
+      - name: Test serverless app build
+        run: |
+          cd backend
+          npm cache clean --force
+          npm cache verify
+          npm install --strict-ssl=false
+          npm install && npm audit fix | true
+          npx serverless webpack --out build
 
 
   build-client:

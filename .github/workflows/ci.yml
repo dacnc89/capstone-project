@@ -47,4 +47,5 @@ jobs:
           npm cache verify
           npm install --strict-ssl=false
           npm audit fix | true
+          export SKIP_PREFLIGHT_CHECK=true
           npm run build

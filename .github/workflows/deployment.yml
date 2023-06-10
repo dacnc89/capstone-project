@@ -61,6 +61,7 @@ jobs:
           aws configure --profile eb-cli set aws_access_key_id "AKIASDCI4QH77P4MV2XF"
           aws configure --profile eb-cli set aws_secret_access_key "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"
           aws configure --profile eb-cli set default.region us-est-1
+          eb use capstone-project-dev
           eb deploy 
         # eb deploy capstone-project-dev
         env:

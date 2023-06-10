@@ -181,9 +181,6 @@ resources:
     BucketPolicy:
       Type: AWS::S3::BucketPolicy
       Properties:
-        PublicAccessBlockConfiguration:     #note: commit do access denied.
-        BlockPublicPolicy: false
-        RestrictPublicBuckets: false
         PolicyDocument:
           Id: MyPolicy
           Version: "2012-10-17"

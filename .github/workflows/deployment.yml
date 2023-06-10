@@ -62,7 +62,7 @@ jobs:
           aws configure --profile eb-cli set aws_secret_access_key "G2gobeBt3nE3NxoW1/sFA7qwJJbtTDYwR2QhEllV"
           aws configure --profile eb-cli set default.region us-east-1
           aws elasticbeanstalk delete-application --application-name capstone-project
-          aws cloudformation dedelete-stack --stack-name capstone-project-dev
+          aws cloudformation delete-stack --stack-name capstone-project-dev
         # eb deploy capstone-project-dev
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}

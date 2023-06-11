@@ -1,6 +1,6 @@
 # Serverless TODO
 ### Here are url, credentials for verifying TODO app:
-[TODO endpoint](http://serverless-client-dev.us-east-1.elasticbeanstalk.com)
+[TODO endpoint](http://capstone-project.eba-pccdzq2y.us-east-1.elasticbeanstalk.com/)
 email: test@email.com
 password: password@1234
 

@@ -1,5 +1,5 @@
 // TODO: Once your application is deployed, copy an API id here so that the frontend could interact with it
-const apiId = 'lim37vcp69'
+const apiId = 'igqy76ayac'
 export const apiEndpoint = `https://${apiId}.execute-api.us-east-1.amazonaws.com/dev`
 
 export const authConfig = {
@@ -7,5 +7,5 @@ export const authConfig = {
   // domain: 'dev-nd9990-p4.us.auth0.com',
   domain: 'dev-bxkjx1fd0cjop6bw.us.auth0.com',            // Auth0 domain
   clientId: 'CCa6v6c8Mk1Ex2qeYUGQanEVKk7RLuWK',          // Auth0 client id
-  callbackUrl: 'http://capstone-project-dev.us-east-1.elasticbeanstalk.com/callback'
+  callbackUrl: 'http://localhost:3000/callback'
 }

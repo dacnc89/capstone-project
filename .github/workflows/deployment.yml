@@ -27,14 +27,14 @@ jobs:
   #       entrypoint: /bin/sh
   #     env:
   #       SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
-  #       # or if using AWS credentials directly
-  #       # AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  #       # AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   #       SLS_DEBUG: 1
-  deploy-client:
+  client:
+    name: Deploy Client
     runs-on: ubuntu-latest
-    environment:
-      name: dev
+    # env:
+    #   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    #   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    #   AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -44,27 +44,48 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install CLI
+      - name: Install EB CLI
         run: |
           python -m pip install --upgrade pip
-          pip install awscli
           pip install awsebcli
-
-      - name: Deploy Client to EB
+          
+      - name: Generate deployment package
         run: |
           cd client
-          rm -rf ./node-modules package-lock.json
-          npm cache clean --force
-          npm cache verify
-          npm install --strict-ssl=false
+          npm install
           npm audit fix | true
-          aws configure --profile eb-cli set aws_access_key_id "AKIASDCI4QH77P4MV2XF"
-          aws configure --profile eb-cli set aws_secret_access_key "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"
-          aws configure --profile eb-cli set default.region us-east-1
-          aws elasticbeanstalk delete-application --application-name capstone-project
-          aws cloudformation delete-stack --stack-name capstone-project-dev
-        # eb deploy capstone-project-dev
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          # AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+          export SKIP_PREFLIGHT_CHECK=true
+          export NODE_OPTIONS=--openssl-legacy-provider
+          npm run build
+          zip -r deploy.zip * .[^.]* -x "**node_modules**"
+      - name: Deploy
+        # run: |
+        #   cd client
+        #   eb init --platform node.js --region us-east-1
+        #   eb terminate client --all --force
+
+        # run: |
+        #   cd client
+        #   aws configure set aws_access_key_id "ASIASDCI4QH75AEHFTOU"
+        #   aws configure set aws_secret_access_key "LzNBGYosHSOC/mzlVKRhS3AunXuR/bNc5g3OPfov"
+        #   aws configure set aws_session_token "FwoGZXIvYXdzEIP//////////wEaDMec7lhbGDn8/6BNhiLVAefRefbUU+AIdCzPjvTwPgm1ArdqO6KBgDLXJcWXvmF3Q8TtTMEwDXd1yIx96c6clvtiW0qtBbY51lBLTJiQTzPDM4PXIjHnghh3falCuZCWAuM6IkcVGB7BlvXWBqL5Bb/BdVzPyoDZrve8vifExq8j7WSYWSTqJVWdPm+upEWjavLcOcHuBqCSTP5L97pJL15YWnBH9OshdFgznQ9FsE+akYeYwwyCmeqmLRMZI0z/MvOppEW3nFoo8IxNNVcWlwnQUn05qbz/1reOI7VckWGsz/xEhCiQtJakBjItLv96pGTR//XFNzcXYurWZLvyDZ7cwEy8QzMNAOJ2+XgQzakdTt/JXbPOSQJW"
+        #   aws configure set default.region us-east-1
+        #   export AWS_ACCESS_KEY_ID=ASIASDCI4QH75AEHFTOU
+        #   export AWS_SECRET_ACCESS_KEY=LzNBGYosHSOC/mzlVKRhS3AunXuR/bNc5g3OPfov
+        #   export AWS_SESSION_TOKEN=FwoGZXIvYXdzEIP//////////wEaDMec7lhbGDn8/6BNhiLVAefRefbUU+AIdCzPjvTwPgm1ArdqO6KBgDLXJcWXvmF3Q8TtTMEwDXd1yIx96c6clvtiW0qtBbY51lBLTJiQTzPDM4PXIjHnghh3falCuZCWAuM6IkcVGB7BlvXWBqL5Bb/BdVzPyoDZrve8vifExq8j7WSYWSTqJVWdPm+upEWjavLcOcHuBqCSTP5L97pJL15YWnBH9OshdFgznQ9FsE+akYeYwwyCmeqmLRMZI0z/MvOppEW3nFoo8IxNNVcWlwnQUn05qbz/1reOI7VckWGsz/xEhCiQtJakBjItLv96pGTR//XFNzcXYurWZLvyDZ7cwEy8QzMNAOJ2+XgQzakdTt/JXbPOSQJW
+        #   eb init --platform node.js --region us-east-1
+        #   eb create capstone-project --enable-spot --instance-types "t3.large"
+
+        run: |
+          cd client
+          aws configure set aws_access_key_id "ASIASDCI4QH75AEHFTOU"
+          aws configure set aws_secret_access_key "LzNBGYosHSOC/mzlVKRhS3AunXuR/bNc5g3OPfov"
+          aws configure set aws_session_token "FwoGZXIvYXdzEIP//////////wEaDMec7lhbGDn8/6BNhiLVAefRefbUU+AIdCzPjvTwPgm1ArdqO6KBgDLXJcWXvmF3Q8TtTMEwDXd1yIx96c6clvtiW0qtBbY51lBLTJiQTzPDM4PXIjHnghh3falCuZCWAuM6IkcVGB7BlvXWBqL5Bb/BdVzPyoDZrve8vifExq8j7WSYWSTqJVWdPm+upEWjavLcOcHuBqCSTP5L97pJL15YWnBH9OshdFgznQ9FsE+akYeYwwyCmeqmLRMZI0z/MvOppEW3nFoo8IxNNVcWlwnQUn05qbz/1reOI7VckWGsz/xEhCiQtJakBjItLv96pGTR//XFNzcXYurWZLvyDZ7cwEy8QzMNAOJ2+XgQzakdTt/JXbPOSQJW"
+          aws configure set default.region us-east-1
+          export AWS_ACCESS_KEY_ID=ASIASDCI4QH75AEHFTOU
+          export AWS_SECRET_ACCESS_KEY=LzNBGYosHSOC/mzlVKRhS3AunXuR/bNc5g3OPfov
+          export AWS_SESSION_TOKEN=FwoGZXIvYXdzEIP//////////wEaDMec7lhbGDn8/6BNhiLVAefRefbUU+AIdCzPjvTwPgm1ArdqO6KBgDLXJcWXvmF3Q8TtTMEwDXd1yIx96c6clvtiW0qtBbY51lBLTJiQTzPDM4PXIjHnghh3falCuZCWAuM6IkcVGB7BlvXWBqL5Bb/BdVzPyoDZrve8vifExq8j7WSYWSTqJVWdPm+upEWjavLcOcHuBqCSTP5L97pJL15YWnBH9OshdFgznQ9FsE+akYeYwwyCmeqmLRMZI0z/MvOppEW3nFoo8IxNNVcWlwnQUn05qbz/1reOI7VckWGsz/xEhCiQtJakBjItLv96pGTR//XFNzcXYurWZLvyDZ7cwEy8QzMNAOJ2+XgQzakdTt/JXbPOSQJW
+          eb init --platform node.js --region us-east-1
+          eb deploy
+
+  

@@ -9,28 +9,28 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy-backend:
-    name: deploy REST API
-    runs-on: ubuntu-latest
-    environment:
-      name: dev
-    strategy:
-      matrix:
-        node-version: [18.x]
-    steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-    - name: Install Plugin and Deploy
-      uses: serverless/github-action@v3
-      with:
-        args: -c "cd ./backend && rm -rf ./node-modules package-lock.json && npm cache clean --force && npm install --strict-ssl=false && npm audit fix | true && serverless plugin install --name serverless-iam-roles-per-function && serverless plugin install --name serverless-webpack && serverless plugin install --name serverless-plugin-tracing && serverless plugin install --name serverless-reqvalidator-plugin && serverless config credentials --provider aws --key ${{ secrets.AWS_ACCESS_KEY_ID }} --secret ${{ secrets.AWS_SECRET_ACCESS_KEY }} && export AWS_ACCESS_KEY_ID=AKIASDCI4QH764K5ELOI && export AWS_SECRET_ACCESS_KEY=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 && serverless deploy --verbose"
-        entrypoint: /bin/sh
-      env:
-        SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
-        SLS_DEBUG: 1
+  # deploy-backend:
+  #   name: deploy REST API
+  #   runs-on: ubuntu-latest
+  #   environment:
+  #     name: dev
+  #   strategy:
+  #     matrix:
+  #       node-version: [18.x]
+  #   steps:
+  #   - uses: actions/checkout@v3
+  #   - name: Use Node.js ${{ matrix.node-version }}
+  #     uses: actions/setup-node@v3
+  #     with:
+  #       node-version: ${{ matrix.node-version }}
+  #   - name: Install Plugin and Deploy
+  #     uses: serverless/github-action@v3
+  #     with:
+  #       args: -c "cd ./backend && rm -rf ./node-modules package-lock.json && npm cache clean --force && npm install --strict-ssl=false && npm audit fix | true && serverless plugin install --name serverless-iam-roles-per-function && serverless plugin install --name serverless-webpack && serverless plugin install --name serverless-plugin-tracing && serverless plugin install --name serverless-reqvalidator-plugin && serverless config credentials --provider aws --key ${{ secrets.AWS_ACCESS_KEY_ID }} --secret ${{ secrets.AWS_SECRET_ACCESS_KEY }} && export AWS_ACCESS_KEY_ID=AKIASDCI4QH764K5ELOI && export AWS_SECRET_ACCESS_KEY=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 && serverless deploy --verbose"
+  #       entrypoint: /bin/sh
+  #     env:
+  #       SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
+  #       SLS_DEBUG: 1
   client:
     name: Deploy Client
     runs-on: ubuntu-latest

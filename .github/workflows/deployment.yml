@@ -59,10 +59,17 @@ jobs:
           npm run build
           zip -r deploy.zip * .[^.]* -x "**node_modules**"
       - name: Deploy
-        # run: |
-        #   cd client
-        #   eb init --platform node.js --region us-east-1
-        #   eb terminate client --all --force
+        run: |
+          cd client
+          aws configure set aws_access_key_id "ASIASDCI4QH75AEHFTOU"
+          aws configure set aws_secret_access_key "LzNBGYosHSOC/mzlVKRhS3AunXuR/bNc5g3OPfov"
+          aws configure set aws_session_token "FwoGZXIvYXdzEIP//////////wEaDMec7lhbGDn8/6BNhiLVAefRefbUU+AIdCzPjvTwPgm1ArdqO6KBgDLXJcWXvmF3Q8TtTMEwDXd1yIx96c6clvtiW0qtBbY51lBLTJiQTzPDM4PXIjHnghh3falCuZCWAuM6IkcVGB7BlvXWBqL5Bb/BdVzPyoDZrve8vifExq8j7WSYWSTqJVWdPm+upEWjavLcOcHuBqCSTP5L97pJL15YWnBH9OshdFgznQ9FsE+akYeYwwyCmeqmLRMZI0z/MvOppEW3nFoo8IxNNVcWlwnQUn05qbz/1reOI7VckWGsz/xEhCiQtJakBjItLv96pGTR//XFNzcXYurWZLvyDZ7cwEy8QzMNAOJ2+XgQzakdTt/JXbPOSQJW"
+          aws configure set default.region us-east-1
+          export AWS_ACCESS_KEY_ID=ASIASDCI4QH75AEHFTOU
+          export AWS_SECRET_ACCESS_KEY=LzNBGYosHSOC/mzlVKRhS3AunXuR/bNc5g3OPfov
+          export AWS_SESSION_TOKEN=FwoGZXIvYXdzEIP//////////wEaDMec7lhbGDn8/6BNhiLVAefRefbUU+AIdCzPjvTwPgm1ArdqO6KBgDLXJcWXvmF3Q8TtTMEwDXd1yIx96c6clvtiW0qtBbY51lBLTJiQTzPDM4PXIjHnghh3falCuZCWAuM6IkcVGB7BlvXWBqL5Bb/BdVzPyoDZrve8vifExq8j7WSYWSTqJVWdPm+upEWjavLcOcHuBqCSTP5L97pJL15YWnBH9OshdFgznQ9FsE+akYeYwwyCmeqmLRMZI0z/MvOppEW3nFoo8IxNNVcWlwnQUn05qbz/1reOI7VckWGsz/xEhCiQtJakBjItLv96pGTR//XFNzcXYurWZLvyDZ7cwEy8QzMNAOJ2+XgQzakdTt/JXbPOSQJW
+          eb init --platform node.js --region us-east-1
+          eb terminate client --all --force
 
         # run: |
         #   cd client
@@ -76,16 +83,16 @@ jobs:
         #   eb init --platform node.js --region us-east-1
         #   eb create capstone-project --enable-spot --instance-types "t3.large"
 
-        run: |
-          cd client
-          aws configure set aws_access_key_id "ASIASDCI4QH75AEHFTOU"
-          aws configure set aws_secret_access_key "LzNBGYosHSOC/mzlVKRhS3AunXuR/bNc5g3OPfov"
-          aws configure set aws_session_token "FwoGZXIvYXdzEIP//////////wEaDMec7lhbGDn8/6BNhiLVAefRefbUU+AIdCzPjvTwPgm1ArdqO6KBgDLXJcWXvmF3Q8TtTMEwDXd1yIx96c6clvtiW0qtBbY51lBLTJiQTzPDM4PXIjHnghh3falCuZCWAuM6IkcVGB7BlvXWBqL5Bb/BdVzPyoDZrve8vifExq8j7WSYWSTqJVWdPm+upEWjavLcOcHuBqCSTP5L97pJL15YWnBH9OshdFgznQ9FsE+akYeYwwyCmeqmLRMZI0z/MvOppEW3nFoo8IxNNVcWlwnQUn05qbz/1reOI7VckWGsz/xEhCiQtJakBjItLv96pGTR//XFNzcXYurWZLvyDZ7cwEy8QzMNAOJ2+XgQzakdTt/JXbPOSQJW"
-          aws configure set default.region us-east-1
-          export AWS_ACCESS_KEY_ID=ASIASDCI4QH75AEHFTOU
-          export AWS_SECRET_ACCESS_KEY=LzNBGYosHSOC/mzlVKRhS3AunXuR/bNc5g3OPfov
-          export AWS_SESSION_TOKEN=FwoGZXIvYXdzEIP//////////wEaDMec7lhbGDn8/6BNhiLVAefRefbUU+AIdCzPjvTwPgm1ArdqO6KBgDLXJcWXvmF3Q8TtTMEwDXd1yIx96c6clvtiW0qtBbY51lBLTJiQTzPDM4PXIjHnghh3falCuZCWAuM6IkcVGB7BlvXWBqL5Bb/BdVzPyoDZrve8vifExq8j7WSYWSTqJVWdPm+upEWjavLcOcHuBqCSTP5L97pJL15YWnBH9OshdFgznQ9FsE+akYeYwwyCmeqmLRMZI0z/MvOppEW3nFoo8IxNNVcWlwnQUn05qbz/1reOI7VckWGsz/xEhCiQtJakBjItLv96pGTR//XFNzcXYurWZLvyDZ7cwEy8QzMNAOJ2+XgQzakdTt/JXbPOSQJW
-          eb init --platform node.js --region us-east-1
-          eb deploy
+        # run: |
+        #   cd client
+        #   aws configure set aws_access_key_id "ASIASDCI4QH75AEHFTOU"
+        #   aws configure set aws_secret_access_key "LzNBGYosHSOC/mzlVKRhS3AunXuR/bNc5g3OPfov"
+        #   aws configure set aws_session_token "FwoGZXIvYXdzEIP//////////wEaDMec7lhbGDn8/6BNhiLVAefRefbUU+AIdCzPjvTwPgm1ArdqO6KBgDLXJcWXvmF3Q8TtTMEwDXd1yIx96c6clvtiW0qtBbY51lBLTJiQTzPDM4PXIjHnghh3falCuZCWAuM6IkcVGB7BlvXWBqL5Bb/BdVzPyoDZrve8vifExq8j7WSYWSTqJVWdPm+upEWjavLcOcHuBqCSTP5L97pJL15YWnBH9OshdFgznQ9FsE+akYeYwwyCmeqmLRMZI0z/MvOppEW3nFoo8IxNNVcWlwnQUn05qbz/1reOI7VckWGsz/xEhCiQtJakBjItLv96pGTR//XFNzcXYurWZLvyDZ7cwEy8QzMNAOJ2+XgQzakdTt/JXbPOSQJW"
+        #   aws configure set default.region us-east-1
+        #   export AWS_ACCESS_KEY_ID=ASIASDCI4QH75AEHFTOU
+        #   export AWS_SECRET_ACCESS_KEY=LzNBGYosHSOC/mzlVKRhS3AunXuR/bNc5g3OPfov
+        #   export AWS_SESSION_TOKEN=FwoGZXIvYXdzEIP//////////wEaDMec7lhbGDn8/6BNhiLVAefRefbUU+AIdCzPjvTwPgm1ArdqO6KBgDLXJcWXvmF3Q8TtTMEwDXd1yIx96c6clvtiW0qtBbY51lBLTJiQTzPDM4PXIjHnghh3falCuZCWAuM6IkcVGB7BlvXWBqL5Bb/BdVzPyoDZrve8vifExq8j7WSYWSTqJVWdPm+upEWjavLcOcHuBqCSTP5L97pJL15YWnBH9OshdFgznQ9FsE+akYeYwwyCmeqmLRMZI0z/MvOppEW3nFoo8IxNNVcWlwnQUn05qbz/1reOI7VckWGsz/xEhCiQtJakBjItLv96pGTR//XFNzcXYurWZLvyDZ7cwEy8QzMNAOJ2+XgQzakdTt/JXbPOSQJW
+        #   eb init --platform node.js --region us-east-1
+        #   eb deploy --verbose
 
   

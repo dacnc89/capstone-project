@@ -3,38 +3,42 @@ on:
   push:
     branches:
       - dev
+  pull_request:
+    branches:
+      - main
+      - dev
   workflow_dispatch:
 
 jobs:
-  # deploy-backend:
-  #   name: deploy REST API
-  #   runs-on: ubuntu-latest
-  #   environment:
-  #     name: dev
-  #   strategy:
-  #     matrix:
-  #       node-version: [18.x]
-  #   steps:
-  #   - uses: actions/checkout@v3
-  #   - name: Use Node.js ${{ matrix.node-version }}
-  #     uses: actions/setup-node@v3
-  #     with:
-  #       node-version: ${{ matrix.node-version }}
-  #   - name: Install Plugin and Deploy
-  #     uses: serverless/github-action@v3
-  #     with:
-  #       args: -c "cd ./backend && rm -rf ./node-modules package-lock.json && npm cache clean --force && npm install --strict-ssl=false && npm audit fix | true && serverless plugin install --name serverless-iam-roles-per-function && serverless plugin install --name serverless-webpack && serverless plugin install --name serverless-plugin-tracing && serverless plugin install --name serverless-reqvalidator-plugin && serverless config credentials --provider aws --key ${{ secrets.AWS_ACCESS_KEY_ID }} --secret ${{ secrets.AWS_SECRET_ACCESS_KEY }} && export AWS_ACCESS_KEY_ID=AKIASDCI4QH764K5ELOI && export AWS_SECRET_ACCESS_KEY=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 && serverless deploy --verbose"
-  #       entrypoint: /bin/sh
-  #     env:
-  #       SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
-  #       SLS_DEBUG: 1
+  deploy-backend:
+    name: deploy REST API
+    runs-on: ubuntu-latest
+    environment:
+      name: dev
+    strategy:
+      matrix:
+        node-version: [18.x]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Install Plugin and Deploy
+      uses: serverless/github-action@v3
+      with:
+        args: -c "cd ./backend && rm -rf ./node-modules package-lock.json && npm cache clean --force && npm install --strict-ssl=false && npm audit fix | true && serverless plugin install --name serverless-iam-roles-per-function && serverless plugin install --name serverless-webpack && serverless plugin install --name serverless-plugin-tracing && serverless plugin install --name serverless-reqvalidator-plugin && serverless config credentials --provider aws --key ${{ secrets.AWS_ACCESS_KEY_ID }} --secret ${{ secrets.AWS_SECRET_ACCESS_KEY }} && export AWS_ACCESS_KEY_ID=AKIASDCI4QH764K5ELOI && export AWS_SECRET_ACCESS_KEY=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 && serverless deploy --verbose"
+        entrypoint: /bin/sh
+      env:
+        SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
+        SLS_DEBUG: 1
   client:
     name: Deploy Client
     runs-on: ubuntu-latest
-    # env:
-    #   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-    #   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    #   AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
+      AWS_SESSION_TOKEN: ${{ secrets.SESSION_TOKEN }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -83,13 +87,17 @@ jobs:
 
         run: |
           cd client
-          aws configure set aws_access_key_id "ASIASDCI4QH7X3CHN5GI"
-          aws configure set aws_secret_access_key "i9R7yAhG9227CRpMFQrvZufFbNFaNm0rmUEMzgFS"
-          aws configure set aws_session_token "FwoGZXIvYXdzEIr//////////wEaDCBfZChCuMcv5vu9SiLVAbX4s7smwoSb04BgCS6f3S8kScbiD1dvdGgq37mrA3sO98AbkWKdeJlPkV/9P5jIBSGCTlvBaDj7r48VkONeEFXk657ked++TSwrzJgZ6m/t4+iWLkZgIDGNcHFThPAwF5sRIetUUWjkEXzE3rgTnTCBM1vStITwuwZEXni1doAPw3YFRsI6vv4rJ3ZUdkwlOkXjTzk9BsYVE9t9C6IGRWPFzeNHIdJiIv5P9KGjk3sLE2sL3JVnE8sTd4J2nz0seWV0JTSSzBpS0BaAXWkxVR3ThPpy8yj57JekBjItaAcAfmsC1UiFxfnyASO7il8l2opFBGX/sbSvMdNslVycGXdv8p3m5+Tg+era"
-          aws configure set default.region us-east-1
-          export AWS_ACCESS_KEY_ID=ASIASDCI4QH7X3CHN5GI
-          export AWS_SECRET_ACCESS_KEY=i9R7yAhG9227CRpMFQrvZufFbNFaNm0rmUEMzgFS
-          export AWS_SESSION_TOKEN=FwoGZXIvYXdzEIr//////////wEaDCBfZChCuMcv5vu9SiLVAbX4s7smwoSb04BgCS6f3S8kScbiD1dvdGgq37mrA3sO98AbkWKdeJlPkV/9P5jIBSGCTlvBaDj7r48VkONeEFXk657ked++TSwrzJgZ6m/t4+iWLkZgIDGNcHFThPAwF5sRIetUUWjkEXzE3rgTnTCBM1vStITwuwZEXni1doAPw3YFRsI6vv4rJ3ZUdkwlOkXjTzk9BsYVE9t9C6IGRWPFzeNHIdJiIv5P9KGjk3sLE2sL3JVnE8sTd4J2nz0seWV0JTSSzBpS0BaAXWkxVR3ThPpy8yj57JekBjItaAcAfmsC1UiFxfnyASO7il8l2opFBGX/sbSvMdNslVycGXdv8p3m5+Tg+era
           eb deploy --verbose
+
+        # run: |
+        #   cd client
+        #   aws configure set aws_access_key_id "ASIASDCI4QH7X3CHN5GI"
+        #   aws configure set aws_secret_access_key "i9R7yAhG9227CRpMFQrvZufFbNFaNm0rmUEMzgFS"
+        #   aws configure set aws_session_token "FwoGZXIvYXdzEIr//////////wEaDCBfZChCuMcv5vu9SiLVAbX4s7smwoSb04BgCS6f3S8kScbiD1dvdGgq37mrA3sO98AbkWKdeJlPkV/9P5jIBSGCTlvBaDj7r48VkONeEFXk657ked++TSwrzJgZ6m/t4+iWLkZgIDGNcHFThPAwF5sRIetUUWjkEXzE3rgTnTCBM1vStITwuwZEXni1doAPw3YFRsI6vv4rJ3ZUdkwlOkXjTzk9BsYVE9t9C6IGRWPFzeNHIdJiIv5P9KGjk3sLE2sL3JVnE8sTd4J2nz0seWV0JTSSzBpS0BaAXWkxVR3ThPpy8yj57JekBjItaAcAfmsC1UiFxfnyASO7il8l2opFBGX/sbSvMdNslVycGXdv8p3m5+Tg+era"
+        #   aws configure set default.region us-east-1
+        #   export AWS_ACCESS_KEY_ID=ASIASDCI4QH7X3CHN5GI
+        #   export AWS_SECRET_ACCESS_KEY=i9R7yAhG9227CRpMFQrvZufFbNFaNm0rmUEMzgFS
+        #   export AWS_SESSION_TOKEN=FwoGZXIvYXdzEIr//////////wEaDCBfZChCuMcv5vu9SiLVAbX4s7smwoSb04BgCS6f3S8kScbiD1dvdGgq37mrA3sO98AbkWKdeJlPkV/9P5jIBSGCTlvBaDj7r48VkONeEFXk657ked++TSwrzJgZ6m/t4+iWLkZgIDGNcHFThPAwF5sRIetUUWjkEXzE3rgTnTCBM1vStITwuwZEXni1doAPw3YFRsI6vv4rJ3ZUdkwlOkXjTzk9BsYVE9t9C6IGRWPFzeNHIdJiIv5P9KGjk3sLE2sL3JVnE8sTd4J2nz0seWV0JTSSzBpS0BaAXWkxVR3ThPpy8yj57JekBjItaAcAfmsC1UiFxfnyASO7il8l2opFBGX/sbSvMdNslVycGXdv8p3m5+Tg+era
+        #   eb deploy --verbose
 
   

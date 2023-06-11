@@ -1,19 +1,19 @@
 branch-defaults:
   default:
     environment: capstone-project
+environment-defaults:
+  capstone-project:
+    branch: null
+    repository: null
 global:
-  application_name: clientV1
-  branch: null
+  application_name: client
   default_ec2_keyname: null
-  default_platform: Node.js 18
+  default_platform: Docker
   default_region: us-east-1
   include_git_submodules: true
   instance_profile: null
   platform_name: null
   platform_version: null
-  profile: default
-  repository: null
+  profile: null
   sc: null
   workspace_type: Application
-deploy:
-  artifact: ./Archive.zip

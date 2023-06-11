@@ -39,7 +39,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: '18.x'
+          node-version: '14.x'
       - uses: actions/setup-python@v4
         with:
           python-version: '3.10'
@@ -52,11 +52,10 @@ jobs:
       - name: Generate deployment package
         run: |
           cd client
-          rm -rf .node_modules package-lock.json
+          rm -rf node_modules package-lock.json
           npm install
           npm audit fix | true
           export SKIP_PREFLIGHT_CHECK=true
-          export NODE_OPTIONS=--openssl-legacy-provider
           npm run build
           zip -r deploy.zip * .[^.]* -x "**node_modules**"
       - name: Deploy
@@ -86,13 +85,13 @@ jobs:
 
         run: |
           cd client
-          aws configure set aws_access_key_id "ASIASDCI4QH7ZMY5GCXJ"
-          aws configure set aws_secret_access_key "xHZQMLK3vOxSBBK6Den9Ey4sSgXe421W7ksqVQVl"
-          aws configure set aws_session_token "FwoGZXIvYXdzEIf//////////wEaDKukprQBsS8mkybPpCLVAT3SJBeabVPH9luxzd89SIvYnSQ5Z87Ojosy7QKgDwe8zPL2aeArk/OsxZ886StbX8i0LaOeYRJzlyAJphs1EouaKVpDsZ/mMWgqAwvl2u1/tg8IuLaozXIz/gpGict3sM5mgrMYtdpMRuKhWPHD7nxSq88vO8DyKOfy4/SglF2UCMKZNH6P8RKV17ZTSlRf4sXygQdAnoLY+KDFKObkHgSE7a5nZnK5Yok+vAByyT1hd+C3N11zYDmpkvbwa//TIxYcDRV6I59QH0eoDbczTgymx5QFLSiQlJekBjItlQ07YKZZePX+42M5yKXFH6VD+1t6KRwHDgTXCt+9xB3frUfqPJTnEUpfBmzp"
+          aws configure set aws_access_key_id "ASIASDCI4QH7X3CHN5GI"
+          aws configure set aws_secret_access_key "i9R7yAhG9227CRpMFQrvZufFbNFaNm0rmUEMzgFS"
+          aws configure set aws_session_token "FwoGZXIvYXdzEIr//////////wEaDCBfZChCuMcv5vu9SiLVAbX4s7smwoSb04BgCS6f3S8kScbiD1dvdGgq37mrA3sO98AbkWKdeJlPkV/9P5jIBSGCTlvBaDj7r48VkONeEFXk657ked++TSwrzJgZ6m/t4+iWLkZgIDGNcHFThPAwF5sRIetUUWjkEXzE3rgTnTCBM1vStITwuwZEXni1doAPw3YFRsI6vv4rJ3ZUdkwlOkXjTzk9BsYVE9t9C6IGRWPFzeNHIdJiIv5P9KGjk3sLE2sL3JVnE8sTd4J2nz0seWV0JTSSzBpS0BaAXWkxVR3ThPpy8yj57JekBjItaAcAfmsC1UiFxfnyASO7il8l2opFBGX/sbSvMdNslVycGXdv8p3m5+Tg+era"
           aws configure set default.region us-east-1
-          export AWS_ACCESS_KEY_ID=ASIASDCI4QH7ZMY5GCXJ
-          export AWS_SECRET_ACCESS_KEY=xHZQMLK3vOxSBBK6Den9Ey4sSgXe421W7ksqVQVl
-          export AWS_SESSION_TOKEN=FwoGZXIvYXdzEIf//////////wEaDKukprQBsS8mkybPpCLVAT3SJBeabVPH9luxzd89SIvYnSQ5Z87Ojosy7QKgDwe8zPL2aeArk/OsxZ886StbX8i0LaOeYRJzlyAJphs1EouaKVpDsZ/mMWgqAwvl2u1/tg8IuLaozXIz/gpGict3sM5mgrMYtdpMRuKhWPHD7nxSq88vO8DyKOfy4/SglF2UCMKZNH6P8RKV17ZTSlRf4sXygQdAnoLY+KDFKObkHgSE7a5nZnK5Yok+vAByyT1hd+C3N11zYDmpkvbwa//TIxYcDRV6I59QH0eoDbczTgymx5QFLSiQlJekBjItlQ07YKZZePX+42M5yKXFH6VD+1t6KRwHDgTXCt+9xB3frUfqPJTnEUpfBmzp
+          export AWS_ACCESS_KEY_ID=ASIASDCI4QH7X3CHN5GI
+          export AWS_SECRET_ACCESS_KEY=i9R7yAhG9227CRpMFQrvZufFbNFaNm0rmUEMzgFS
+          export AWS_SESSION_TOKEN=FwoGZXIvYXdzEIr//////////wEaDCBfZChCuMcv5vu9SiLVAbX4s7smwoSb04BgCS6f3S8kScbiD1dvdGgq37mrA3sO98AbkWKdeJlPkV/9P5jIBSGCTlvBaDj7r48VkONeEFXk657ked++TSwrzJgZ6m/t4+iWLkZgIDGNcHFThPAwF5sRIetUUWjkEXzE3rgTnTCBM1vStITwuwZEXni1doAPw3YFRsI6vv4rJ3ZUdkwlOkXjTzk9BsYVE9t9C6IGRWPFzeNHIdJiIv5P9KGjk3sLE2sL3JVnE8sTd4J2nz0seWV0JTSSzBpS0BaAXWkxVR3ThPpy8yj57JekBjItaAcAfmsC1UiFxfnyASO7il8l2opFBGX/sbSvMdNslVycGXdv8p3m5+Tg+era
           eb init --platform node.js --region us-east-1
           eb deploy --verbose
 

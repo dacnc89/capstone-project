@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/preset-env": "^7.22.1",
+    "@babel/plugin-proposal-private-property-in-object": "7.21.11",
     "axios": "^0.21.1",
     "dateformat": "^3.0.3",
     "immutability-helper": "^3.0.0",
@@ -15,7 +17,6 @@
     "styled-components": "^5.3.0"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "*",
     "@types/dateformat": "^3.0.1",
     "@types/jest": "26.0.24",
     "@types/node": "16.3.2",
@@ -28,10 +29,10 @@
     "typescript": ">=3.8.0"
   },
   "scripts": {
-    "start": "react-scripts --openssl-legacy-provider start",
-    "build": "react-scripts --openssl-legacy-provider build",
-    "test": "react-scripts --openssl-legacy-provider test",
-    "eject": "react-scripts --openssl-legacy-provider eject"
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": "react-app"

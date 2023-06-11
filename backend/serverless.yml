@@ -24,7 +24,7 @@ provider:
   environment:
     TODOS_TABLE: Todos-${self:provider.stage}
     TODOS_CREATED_AT_INDEX: CreatedAtIndex
-    ATTACHMENT_S3_BUCKET: dacnc-capstone-project-images-${self:provider.stage}
+    ATTACHMENT_S3_BUCKET: dacnc-capstone-project-images-${self:provider.stage}-v1
     SIGNED_URL_EXPIRATION: 300
 
   logs:

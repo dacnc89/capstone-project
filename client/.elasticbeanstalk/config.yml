@@ -1,18 +1,19 @@
 branch-defaults:
   default:
-    environment: dacnc-media-client
-    group_suffix: null
+    environment: capstone-project
+environment-defaults:
+  capstone-project:
+    branch: null
+    repository: null
 global:
-  application_name: dacnc-media-client
-  branch: null
-  default_ec2_keyname: aws-eb-key
-  default_platform: Node.js 16 running on 64bit Amazon Linux 2
+  application_name: client
+  default_ec2_keyname: null
+  default_platform: Docker
   default_region: us-east-1
   include_git_submodules: true
   instance_profile: null
   platform_name: null
   platform_version: null
-  profile: eb-cli
-  repository: null
+  profile: null
   sc: null
   workspace_type: Application

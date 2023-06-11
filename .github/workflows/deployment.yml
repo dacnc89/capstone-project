@@ -1,0 +1,102 @@
+name: Deployment
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+  workflow_dispatch:
+
+jobs:
+  deploy-backend:
+    name: deploy REST API
+    runs-on: ubuntu-latest
+    environment:
+      name: dev
+    strategy:
+      matrix:
+        node-version: [18.x]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Install Plugin and Deploy
+      uses: serverless/github-action@v3
+      with:
+        args: -c "cd ./backend && rm -rf ./node-modules package-lock.json && npm cache clean --force && npm install --strict-ssl=false && npm audit fix | true && serverless plugin install --name serverless-iam-roles-per-function && serverless plugin install --name serverless-webpack && serverless plugin install --name serverless-plugin-tracing && serverless plugin install --name serverless-reqvalidator-plugin && serverless config credentials --provider aws --key ${{ secrets.AWS_ACCESS_KEY_ID }} --secret ${{ secrets.AWS_SECRET_ACCESS_KEY }} && export AWS_ACCESS_KEY_ID=AKIASDCI4QH764K5ELOI && export AWS_SECRET_ACCESS_KEY=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 && serverless deploy --verbose"
+        entrypoint: /bin/sh
+      env:
+        SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
+        SLS_DEBUG: 1
+  client:
+    name: Deploy Client
+    runs-on: ubuntu-latest
+    environment:
+      name: dev
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
+      AWS_SESSION_TOKEN: ${{ secrets.SESSION_TOKEN }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install EB CLI
+        run: |
+          python -m pip install --upgrade pip
+          pip install awsebcli
+          
+      - name: Run build before deploy
+        run: |
+          cd client
+          npm install
+          npm audit fix | true
+          export SKIP_PREFLIGHT_CHECK=true
+          npm run build
+      - name: Deploy
+        # run: |
+        #   cd client
+        #   aws configure set aws_access_key_id "ASIASDCI4QH75AEHFTOU"
+        #   aws configure set aws_secret_access_key "LzNBGYosHSOC/mzlVKRhS3AunXuR/bNc5g3OPfov"
+        #   aws configure set aws_session_token "FwoGZXIvYXdzEIP//////////wEaDMec7lhbGDn8/6BNhiLVAefRefbUU+AIdCzPjvTwPgm1ArdqO6KBgDLXJcWXvmF3Q8TtTMEwDXd1yIx96c6clvtiW0qtBbY51lBLTJiQTzPDM4PXIjHnghh3falCuZCWAuM6IkcVGB7BlvXWBqL5Bb/BdVzPyoDZrve8vifExq8j7WSYWSTqJVWdPm+upEWjavLcOcHuBqCSTP5L97pJL15YWnBH9OshdFgznQ9FsE+akYeYwwyCmeqmLRMZI0z/MvOppEW3nFoo8IxNNVcWlwnQUn05qbz/1reOI7VckWGsz/xEhCiQtJakBjItLv96pGTR//XFNzcXYurWZLvyDZ7cwEy8QzMNAOJ2+XgQzakdTt/JXbPOSQJW"
+        #   aws configure set default.region us-east-1
+        #   export AWS_ACCESS_KEY_ID=ASIASDCI4QH75AEHFTOU
+        #   export AWS_SECRET_ACCESS_KEY=LzNBGYosHSOC/mzlVKRhS3AunXuR/bNc5g3OPfov
+        #   export AWS_SESSION_TOKEN=FwoGZXIvYXdzEIP//////////wEaDMec7lhbGDn8/6BNhiLVAefRefbUU+AIdCzPjvTwPgm1ArdqO6KBgDLXJcWXvmF3Q8TtTMEwDXd1yIx96c6clvtiW0qtBbY51lBLTJiQTzPDM4PXIjHnghh3falCuZCWAuM6IkcVGB7BlvXWBqL5Bb/BdVzPyoDZrve8vifExq8j7WSYWSTqJVWdPm+upEWjavLcOcHuBqCSTP5L97pJL15YWnBH9OshdFgznQ9FsE+akYeYwwyCmeqmLRMZI0z/MvOppEW3nFoo8IxNNVcWlwnQUn05qbz/1reOI7VckWGsz/xEhCiQtJakBjItLv96pGTR//XFNzcXYurWZLvyDZ7cwEy8QzMNAOJ2+XgQzakdTt/JXbPOSQJW
+        #   eb init --platform node.js --region us-east-1
+        #   eb terminate client --all --force
+
+        # run: |
+        #   # cd client
+        #   # aws configure set aws_access_key_id "ASIASDCI4QH7ZMY5GCXJ"
+        #   # aws configure set aws_secret_access_key "xHZQMLK3vOxSBBK6Den9Ey4sSgXe421W7ksqVQVl"
+        #   # aws configure set aws_session_token "FwoGZXIvYXdzEIf//////////wEaDKukprQBsS8mkybPpCLVAT3SJBeabVPH9luxzd89SIvYnSQ5Z87Ojosy7QKgDwe8zPL2aeArk/OsxZ886StbX8i0LaOeYRJzlyAJphs1EouaKVpDsZ/mMWgqAwvl2u1/tg8IuLaozXIz/gpGict3sM5mgrMYtdpMRuKhWPHD7nxSq88vO8DyKOfy4/SglF2UCMKZNH6P8RKV17ZTSlRf4sXygQdAnoLY+KDFKObkHgSE7a5nZnK5Yok+vAByyT1hd+C3N11zYDmpkvbwa//TIxYcDRV6I59QH0eoDbczTgymx5QFLSiQlJekBjItlQ07YKZZePX+42M5yKXFH6VD+1t6KRwHDgTXCt+9xB3frUfqPJTnEUpfBmzp"
+        #   # aws configure set default.region us-east-1
+        #   # export AWS_ACCESS_KEY_ID=ASIASDCI4QH7ZMY5GCXJ
+        #   # export AWS_SECRET_ACCESS_KEY=xHZQMLK3vOxSBBK6Den9Ey4sSgXe421W7ksqVQVl
+        #   # export AWS_SESSION_TOKEN=FwoGZXIvYXdzEIf//////////wEaDKukprQBsS8mkybPpCLVAT3SJBeabVPH9luxzd89SIvYnSQ5Z87Ojosy7QKgDwe8zPL2aeArk/OsxZ886StbX8i0LaOeYRJzlyAJphs1EouaKVpDsZ/mMWgqAwvl2u1/tg8IuLaozXIz/gpGict3sM5mgrMYtdpMRuKhWPHD7nxSq88vO8DyKOfy4/SglF2UCMKZNH6P8RKV17ZTSlRf4sXygQdAnoLY+KDFKObkHgSE7a5nZnK5Yok+vAByyT1hd+C3N11zYDmpkvbwa//TIxYcDRV6I59QH0eoDbczTgymx5QFLSiQlJekBjItlQ07YKZZePX+42M5yKXFH6VD+1t6KRwHDgTXCt+9xB3frUfqPJTnEUpfBmzp
+        #   # eb init --platform node.js --region us-east-1
+        #   # eb create capstone-project --enable-spot --instance-types "m5.large"
+
+        run: |
+          cd client
+          eb deploy --verbose
+
+        # run: |
+        #   cd client
+        #   aws configure set aws_access_key_id "ASIASDCI4QH7X3CHN5GI"
+        #   aws configure set aws_secret_access_key "i9R7yAhG9227CRpMFQrvZufFbNFaNm0rmUEMzgFS"
+        #   aws configure set aws_session_token "FwoGZXIvYXdzEIr//////////wEaDCBfZChCuMcv5vu9SiLVAbX4s7smwoSb04BgCS6f3S8kScbiD1dvdGgq37mrA3sO98AbkWKdeJlPkV/9P5jIBSGCTlvBaDj7r48VkONeEFXk657ked++TSwrzJgZ6m/t4+iWLkZgIDGNcHFThPAwF5sRIetUUWjkEXzE3rgTnTCBM1vStITwuwZEXni1doAPw3YFRsI6vv4rJ3ZUdkwlOkXjTzk9BsYVE9t9C6IGRWPFzeNHIdJiIv5P9KGjk3sLE2sL3JVnE8sTd4J2nz0seWV0JTSSzBpS0BaAXWkxVR3ThPpy8yj57JekBjItaAcAfmsC1UiFxfnyASO7il8l2opFBGX/sbSvMdNslVycGXdv8p3m5+Tg+era"
+        #   aws configure set default.region us-east-1
+        #   export AWS_ACCESS_KEY_ID=ASIASDCI4QH7X3CHN5GI
+        #   export AWS_SECRET_ACCESS_KEY=i9R7yAhG9227CRpMFQrvZufFbNFaNm0rmUEMzgFS
+        #   export AWS_SESSION_TOKEN=FwoGZXIvYXdzEIr//////////wEaDCBfZChCuMcv5vu9SiLVAbX4s7smwoSb04BgCS6f3S8kScbiD1dvdGgq37mrA3sO98AbkWKdeJlPkV/9P5jIBSGCTlvBaDj7r48VkONeEFXk657ked++TSwrzJgZ6m/t4+iWLkZgIDGNcHFThPAwF5sRIetUUWjkEXzE3rgTnTCBM1vStITwuwZEXni1doAPw3YFRsI6vv4rJ3ZUdkwlOkXjTzk9BsYVE9t9C6IGRWPFzeNHIdJiIv5P9KGjk3sLE2sL3JVnE8sTd4J2nz0seWV0JTSSzBpS0BaAXWkxVR3ThPpy8yj57JekBjItaAcAfmsC1UiFxfnyASO7il8l2opFBGX/sbSvMdNslVycGXdv8p3m5+Tg+era
+        #   eb deploy --verbose
+
+  

@@ -7,5 +7,5 @@ export const authConfig = {
   // domain: 'dev-nd9990-p4.us.auth0.com',
   domain: 'dev-bxkjx1fd0cjop6bw.us.auth0.com',            // Auth0 domain
   clientId: 'CCa6v6c8Mk1Ex2qeYUGQanEVKk7RLuWK',          // Auth0 client id
-  callbackUrl: 'http://localhost:3000/callback'
+  callbackUrl: 'http://capstone-project.eba-pccdzq2y.us-east-1.elasticbeanstalk.com/callback'
 }
